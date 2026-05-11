@@ -43,50 +43,50 @@
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
-      "version": "4.2.3",
-      "executable": "cmake-4.2.3-windows-x86_64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-x86_64.zip",
-      "sha512": "bff327a8a9e81e48b61e1d22661cb547ffe0337ed201f438307ef058445867f7dd7417b7f2749760e391d138742c7dba6f5346c97f0bbe3a718783205543581f",
-      "archive": "cmake-4.2.3-windows-x86_64.zip"
+      "version": "3.30.8",
+      "executable": "cmake-3.30.8-windows-x86_64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.8/cmake-3.30.8-windows-x86_64.zip",
+      "sha512": "a54b4f20c86e91fb810d857c740aca06253a4cae90e8cae2d24a5b1c2f60667e127e5eb35919ca6e135796be0235fea4cdba054c83b2cf3d69d6c3d2d7a28c5e",
+      "archive": "cmake-3.30.8-windows-x86_64.zip"
     },
     {
       "name": "cmake",
       "os": "windows",
       "arch": "arm64",
-      "version": "4.2.3",
-      "executable": "cmake-4.2.3-windows-arm64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-arm64.zip",
-      "sha512": "ae50dceeb410c6d4473a637ff5e86da0add370239f91de8252b1e2f715933ea63151c082db5db5dadb86ced03cf5d35303bd0c03ce7746430283043c1c4c0d18",
-      "archive": "cmake-4.2.3-windows-arm64.zip"
+      "version": "3.30.8",
+      "executable": "cmake-3.30.8-windows-arm64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.8/cmake-3.30.8-windows-arm64.zip",
+      "sha512": "9fa14372738a5008c9c731c4199456003128e1343a93b20d0d733d976cd368656780e0be414b5cd48e9941348ec38638189b5d7920f248e8f77b5107ff73b955",
+      "archive": "cmake-3.30.8-windows-arm64.zip"
     },
     {
       "name": "cmake",
       "os": "osx",
-      "version": "4.2.3",
-      "executable": "cmake-4.2.3-macos-universal/CMake.app/Contents/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-macos-universal.tar.gz",
-      "sha512": "b3c5358f404ae4a98f5d51595b444f8f21a87135752bd4f0b20987db783f12c78a26fa9c201963b58eb65e11490d75e651e88b7fee7832ca4476c6927fd42f65",
-      "archive": "cmake-4.2.3-macos-universal.tar.gz"
+      "version": "3.30.8",
+      "executable": "cmake-3.30.8-macos-universal/CMake.app/Contents/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.8/cmake-3.30.8-macos-universal.tar.gz",
+      "sha512": "37aaf0b49b9b0bbd2aeed270c137616817b0d47169c2b7b3fe21e07c7de7a567e07b90769ef8bb3667d2a901a61aea5a77cc488064b43fca8e0a9220ead34cc9",
+      "archive": "cmake-3.30.8-macos-universal.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
       "arch": "arm64",
-      "version": "4.2.3",
-      "executable": "cmake-4.2.3-linux-aarch64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-aarch64.tar.gz",
-      "sha512": "ee38f6c1fb56957e3f77fa9c083945c3021b50da7e7c057d7c586858ec0fe6fd8383a27b23fab1aa9015982ffb989f06ba08dfda73e713364c1a481bf1ce6316",
-      "archive": "cmake-4.2.3-linux-aarch64.tar.gz"
+      "version": "3.30.8",
+      "executable": "cmake-3.30.8-linux-aarch64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.8/cmake-3.30.8-linux-aarch64.tar.gz",
+      "sha512": "72c3689bd0b668eec8f5d85c552c0e69bb6fa5c505f1c99a82d2ed7c64f82ed47f904ad0633a98ebd74751d8ab91dd9a4091e64de2b9662e2e64b668d6158ccb",
+      "archive": "cmake-3.30.8-linux-aarch64.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
       "arch": "amd64",
-      "version": "4.2.3",
-      "executable": "cmake-4.2.3-linux-x86_64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-x86_64.tar.gz",
-      "sha512": "2f7e2b48bfa1c93b6e77050e48f940b19abb4885726af4dd9dcb5e280835a766dc4d3e96411f86b6fca2c6dca667d1a4c6654871b482524f52cdb5ebf47c76ad",
-      "archive": "cmake-4.2.3-linux-x86_64.tar.gz"
+      "version": "3.30.8",
+      "executable": "cmake-3.30.8-linux-x86_64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.8/cmake-3.30.8-linux-x86_64.tar.gz",
+      "sha512": "9847c84633fc1796af162a5d5c6c1770454918ba35754877890d34a01aac54db9b22123f610b2fb13647598bf74127a41163d832ec28e02ba340ad65a79184e4",
+      "archive": "cmake-3.30.8-linux-x86_64.tar.gz"
     },
     {
       "name": "git",
