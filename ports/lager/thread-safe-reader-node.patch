@@ -1,0 +1,150 @@
+diff --git a/lager/detail/nodes.hpp b/lager/detail/nodes.hpp
+index 87ed89b..41e2641 100644
+--- a/lager/detail/nodes.hpp
++++ b/lager/detail/nodes.hpp
+@@ -47,6 +47,7 @@
+ #include <algorithm>
+ #include <functional>
+ #include <memory>
++#include <shared_mutex>
+ #include <vector>
+ 
+ namespace lager {
+@@ -146,8 +147,28 @@ public:
+     virtual void recompute() = 0;
+     virtual void refresh()   = 0;
+ 
++    /*!
++     * Returns the uncommitted value of the node.
++     *
++     * @warning May only be called from the thread that drives propagation, the
++     * one running the event loop of the store this node belongs to.  It hands
++     * out a reference to a slot that `push_down()` writes on that thread.
++     */
+     const value_type& current() const { return current_; }
+-    const value_type& last() const { return last_; }
++
++    /*!
++     * Returns a copy of the last committed value of the node.
++     *
++     * May be called from any thread.  The copy is taken under a lock that
++     * excludes the commit performed by `send_down()`, so a reader on another
++     * thread always observes a fully constructed value instead of one that is
++     * being assigned over.
++     */
++    value_type last() const
++    {
++        std::shared_lock<std::shared_mutex> lock{last_mutex_};
++        return last_;
++    }
+ 
+     void link(std::weak_ptr<reader_node_base> child)
+     {
+@@ -173,7 +194,14 @@ public:
+     {
+         recompute();
+         if (needs_send_down_) {
+-            last_            = current_;
++            {
++                // Held for the assignment only.  Nothing is called into while
++                // the lock is taken, in particular no child node and no
++                // observer, so a single node lock is ever held at a time and
++                // no lock ordering can arise.
++                std::unique_lock<std::shared_mutex> lock{last_mutex_};
++                last_ = current_;
++            }
+             needs_send_down_ = false;
+             needs_notify_    = true;
+             for (auto& wchild : children_) {
+@@ -193,6 +221,8 @@ public:
+             notifying_guard_t notifying_guard(notifying_);
+             bool garbage = false;
+ 
++            // No lock: last_ is only written by send_down() on this same
++            // thread, and readers on other threads only read it.
+             observers_(last_);
+             for (size_t i = 0, size = children_.size(); i < size; ++i) {
+                 if (auto child = children_[i].lock()) {
+@@ -222,6 +252,7 @@ private:
+ 
+     value_type current_;
+     value_type last_;
++    mutable std::shared_mutex last_mutex_;
+     std::vector<std::weak_ptr<reader_node_base>> children_;
+     signal_type observers_;
+ 
+diff --git a/lager/extra/qt.hpp b/lager/extra/qt.hpp
+index 879ed85..5d14acd 100644
+--- a/lager/extra/qt.hpp
++++ b/lager/extra/qt.hpp
+@@ -59,7 +59,7 @@ struct qt_helper
+ #define LAGER_QT_READER(type, name)                                            \
+     ::lager::reader<type> LAGER_QT(name);                                      \
+     Q_PROPERTY(type name READ name NOTIFY name##Changed)                       \
+-    const type& name() const { return LAGER_QT(name).get(); }                  \
++    type name() const { return LAGER_QT(name).get(); }                         \
+     LAGER_QT_SIGNAL_DETAIL(type, name)                                         \
+     /**/
+ 
+@@ -70,7 +70,7 @@ struct qt_helper
+ #define LAGER_QT_CURSOR(type, name)                                            \
+     ::lager::cursor<type> LAGER_QT(name);                                      \
+     Q_PROPERTY(type name READ name WRITE set##name NOTIFY name##Changed)       \
+-    const type& name() const { return LAGER_QT(name).get(); }                  \
++    type name() const { return LAGER_QT(name).get(); }                         \
+     void set##name(const type& val) { LAGER_QT(name).set(val); }               \
+     LAGER_QT_SIGNAL_DETAIL(type, name)                                         \
+     /**/
+diff --git a/lager/reader.hpp b/lager/reader.hpp
+index 8744bf6..da5cb4a 100644
+--- a/lager/reader.hpp
++++ b/lager/reader.hpp
+@@ -21,11 +21,35 @@
+ 
+ #include <zug/meta/value_type.hpp>
+ 
++#include <memory>
++#include <type_traits>
++
+ namespace lager {
+ 
+ template <typename NodeT>
+ class cursor_base;
+ 
++namespace detail {
++
++/*!
++ * Temporary handed out by `reader_mixin::operator->()` so that
++ * `reader->member` keeps working now that `get()` returns the value by copy.
++ * The proxy owns the copy and lives until the end of the full expression it
++ * appears in.
++ *
++ * @warning Never bind a reference to `reader->member`: the proxy holding the
++ * member is destroyed at the end of the declaration.  Bind a value, or bind a
++ * reference to `*reader` instead, which is lifetime extended.
++ */
++template <typename T>
++struct arrow_proxy
++{
++    T value;
++    const T* operator->() const { return std::addressof(value); }
++};
++
++} // namespace detail
++
+ //! @defgroup cursors
+ //! @{
+ 
+@@ -34,7 +58,11 @@ struct reader_mixin
+ {
+     decltype(auto) get() const { return node_()->last(); }
+     decltype(auto) operator*() const { return get(); }
+-    decltype(auto) operator->() const { return &get(); }
++    auto operator->() const
++    {
++        using value_t = std::decay_t<decltype(node_()->last())>;
++        return detail::arrow_proxy<value_t>{get()};
++    }
+ 
+     template <typename T>
+     auto operator[](T&& t) const

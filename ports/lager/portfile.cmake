@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 2016df38be90ee176bcb73ea414be2318bc1ef31
     SHA512 07d9f2cf128ad2e751abbfaa03969524ffba785ac2696e6b94ee8e28166fc3ab427de2fc6a98eba50d2f936879b9e878a011c3ba9a25ba39109e7939d39c4902
     HEAD_REF master
+    PATCHES
+        thread-safe-reader-node.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
